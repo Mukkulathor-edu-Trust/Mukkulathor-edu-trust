@@ -31,3 +31,6 @@ This project is built with:
 - Tailwind CSS
 
 ## How can I deploy this project?
+npm install --save-dev shx
+npm install --save-dev gh-pages
+npm run deploy
