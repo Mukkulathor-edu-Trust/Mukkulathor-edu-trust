@@ -5,7 +5,7 @@ import path from "path"; // 👈 Make sure to import path
 
 export default defineConfig(({ mode }) => ({
   plugins: [react()],
-  base: "/uplifting-futures-hub/",
+  base: "/Mukkulathor-edu-trust/",
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"), // 👈 Add this line
