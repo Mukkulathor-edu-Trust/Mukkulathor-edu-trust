@@ -1,21 +1,20 @@
 // vite.config.ts
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
-import path from "path"; // 👈 Make sure to import path
+import path from "path";
 
-export default defineConfig(({ mode }) => ({
+export default defineConfig({
   plugins: [react()],
-  base: "/Mukkulathor-edu-trust/",
+  base: "/", // ✅ Render requires base as root
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"), // 👈 Add this line
+      "@": path.resolve(__dirname, "./src"),
     },
   },
   build: {
+    outDir: "dist", // ✅ ensure output dir is 'dist'
     rollupOptions: {
-      input: {
-        main: "index.html",
-      },
+      input: "./index.html", // ✅ full relative path
     },
   },
-}));
+});
