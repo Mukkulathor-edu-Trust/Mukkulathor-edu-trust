@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Progress } from "@/components/ui/progress"; 
 import { Upload } from 'lucide-react';
 
 interface Student {
@@ -106,6 +107,47 @@ const StudentForm: React.FC<StudentFormProps> = ({ formData, setFormData, onSubm
     }
   };
 
+  const calculateCompletion = () => {
+    const requiredFields = [
+      'fullName', 'dateOfBirth', 'gender', 'parentGuardianName',
+      'parentContact', 'address', 'aadharNumber', 'studentContact',
+      'email', 'targetExams', 'preparationLevel', 'mediumOfInstruction',
+      'startDate', 'endDate'
+    ];
+
+    let total = requiredFields.length;
+    let filled = requiredFields.filter(field => !!formData[field as keyof typeof formData]).length;
+
+    // Conditional SSLC fields
+    if (formData.hasSchoolSslc) {
+      const sslcFields = ['sslcSchool', 'sslcBoard', 'sslcYear', 'sslcPercentage'];
+      total += sslcFields.length;
+      filled += sslcFields.filter(field => !!formData[field as keyof typeof formData]).length;
+    }
+
+    if (formData.hasHsc) {
+      const hscFields = ['hscCollege', 'hscBoard', 'hscYear', 'hscPercentage', 'hscStream'];
+      total += hscFields.length;
+      filled += hscFields.filter(field => !!formData[field as keyof typeof formData]).length;
+    }
+
+    if (formData.hasUg) {
+      const ugFields = ['ugCourse', 'ugCollege', 'ugYear', 'ugPercentage'];
+      total += ugFields.length;
+      filled += ugFields.filter(field => !!formData[field as keyof typeof formData]).length;
+    }
+
+    if (formData.hasPg) {
+      const pgFields = ['pgCourse', 'pgCollege', 'pgYear', 'pgPercentage'];
+      total += pgFields.length;
+      filled += pgFields.filter(field => !!formData[field as keyof typeof formData]).length;
+    }
+
+    const percentage = Math.round((filled / total) * 100);
+    return percentage;
+  };
+
+  const completion = calculateCompletion();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -189,6 +231,10 @@ const StudentForm: React.FC<StudentFormProps> = ({ formData, setFormData, onSubm
           {/* Personal Information */}
           <div>
             <h3 className="text-lg font-semibold mb-4 text-blue-600">Personal Information</h3>
+            <div className="mb-6">
+              <Label className="text-sm font-medium text-muted-foreground">Form Completion: {completion}%</Label>
+              <Progress value={completion} className="h-2 mt-1 bg-gray-200" />
+            </div>
             <div className="grid md:grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="fullName">Full Name *</Label>

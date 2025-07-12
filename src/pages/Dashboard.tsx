@@ -128,6 +128,9 @@ const Dashboard = () => {
   };
 
   const [formData, setFormData] = useState<Omit<Student, 'id'>>(initialFormData);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const studentsPerPage = 10;
 
   useEffect(() => {
     const fetchStudents = async () => {
@@ -189,6 +192,8 @@ const Dashboard = () => {
     }
     return result;
   };
+
+
 
   const handleLogout = () => {
     // localStorage.removeItem('isAuthenticated');
@@ -340,6 +345,18 @@ const Dashboard = () => {
     setFormData(initialFormData);
   };
 
+  const filteredStudents = students.filter(student =>
+    student.fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    student.email.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const totalPages = Math.ceil(filteredStudents.length / studentsPerPage);
+  const paginatedStudents = filteredStudents.slice(
+    (currentPage - 1) * studentsPerPage,
+    currentPage * studentsPerPage
+  );
+
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Header */}
@@ -390,8 +407,41 @@ const Dashboard = () => {
               <CardDescription>Manage all registered students with comprehensive details</CardDescription>
             </CardHeader>
             <CardContent>
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
+                <input
+                  type="text"
+                  placeholder="Search by name or email..."
+                  value={searchQuery}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    setCurrentPage(1); // Reset to page 1 when searching
+                  }}
+                  className="w-full sm:w-1/2"
+                />
+
+                <div className="mt-4 sm:mt-0 flex space-x-2 items-center">
+                  <Button
+                    variant="outline"
+                    onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                    disabled={currentPage === 1}
+                  >
+                    Prev
+                  </Button>
+                  <span>
+                    Page {currentPage} of {totalPages}
+                  </span>
+                  <Button
+                    variant="outline"
+                    onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                    disabled={currentPage === totalPages}
+                  >
+                    Next
+                  </Button>
+                </div>
+              </div>
               <StudentTable
-                students={students}
+                // students={students}
+                students={paginatedStudents}
                 onEdit={handleEdit}
                 onDelete={handleDelete}
               />

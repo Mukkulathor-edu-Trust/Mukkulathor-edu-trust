@@ -115,11 +115,11 @@ const Login = () => {
                 Login
               </Button>
             </form>
-            {/* <div className="mt-6 text-center">
+            <div className="mt-6 text-center">
               <Button asChild variant="outline">
                 <Link to="/">Back to Home</Link>
               </Button>
-            </div> */}
+            </div>
           </CardContent>
         </Card>
       </div>
